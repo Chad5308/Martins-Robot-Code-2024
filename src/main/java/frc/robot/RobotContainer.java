@@ -58,32 +58,18 @@ public RobotContainer() {
     SmartDashboard.putData("Auto Chooser", autoChooser);   
 
     controlType = new SendableChooser<>();
-    configureControllers();
     configureAutos();
     SmartDashboard.putData("Control Chooser", controlType); 
   }
 
 
-  public void configureControllers(){
-    controlType.addOption("Dual Controler", controllers());
-    controlType.addOption("Flight Stick", flightSticks());
-  }
 
   public void configureAutos(){
-
+    autoChooser.addOption("TestAuto", testAuto());
   }
 
-  public Command flightSticks(){
-    System.out.println("AHHHHHHHHHHHHHHHHHHHHHHH");
-    return Commands.run(() -> {isJoystick = true;});
-  }
-  public Command controllers(){
-    return Commands.run(() -> {isJoystick = false;});
-  }
-  
-  
-  public Command simpleAuto(){
-    return new PathPlannerAuto("simpleAuto");
+  public Command testAuto(){
+    return new PathPlannerAuto("testAuto");
   }
 
   public Command getAutonomousCommand() {
