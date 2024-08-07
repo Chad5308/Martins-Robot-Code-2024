@@ -4,9 +4,17 @@
 
 package frc.robot;
 
+import frc.robot.Commands.AutoCommand;
+import frc.robot.Commands.IntakeCommand;
+import frc.robot.Commands.ShooterCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.DriveFiles.DriveCommand;
+import frc.robot.DriveFiles.LimelightSubsystem;
 import frc.robot.DriveFiles.SwerveSubsystem;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,17 +41,25 @@ public class RobotContainer {
 
   public static Robot robot = new Robot();
   public SwerveSubsystem s_Swerve = new SwerveSubsystem();
-  public DriveCommand d_Command = new DriveCommand(s_Swerve, opController, leftStick, rightStick);
+  public LimelightSubsystem s_Limelight = new LimelightSubsystem(s_Swerve);
+  public DriveCommand c_Drive = new DriveCommand(s_Swerve, opController, leftStick, rightStick);
+  public ShooterCommand c_Shooter = new ShooterCommand();
+  public IntakeCommand c_Intake = new IntakeCommand();
+  public AutoCommand c_AutoCommand = new AutoCommand(c_Drive, s_Swerve, s_Limelight);
   private SendableChooser<Command> autoChooser;
 
 
  
 public RobotContainer() {
-  s_Swerve.setDefaultCommand(d_Command);
-  configureBindings();
+    s_Swerve.setDefaultCommand(c_Drive);
+    configureBindings();
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);   
 
     controlType = new SendableChooser<>();
     configureControllers();
+    configureAutos();
     SmartDashboard.putData("Control Chooser", controlType); 
   }
 
@@ -51,6 +67,10 @@ public RobotContainer() {
   public void configureControllers(){
     controlType.addOption("Dual Controler", controllers());
     controlType.addOption("Flight Stick", flightSticks());
+  }
+
+  public void configureAutos(){
+
   }
 
   public Command flightSticks(){
@@ -62,6 +82,10 @@ public RobotContainer() {
   }
   
   
+  public Command simpleAuto(){
+    return new PathPlannerAuto("simpleAuto");
+  }
+
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }

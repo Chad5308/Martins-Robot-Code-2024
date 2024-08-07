@@ -1,6 +1,8 @@
 package frc.robot.DriveFiles;
 
 
+import java.util.Optional;
+
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,6 +24,8 @@ public class SwerveSubsystem extends SubsystemBase{
     public final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
     public boolean fieldOriented = false;
     public boolean hasReset = false;
+    public boolean isRedAlliance;
+    Optional<Alliance> alliance;
     
     public static SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDegrees, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
     public static SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDegrees, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
@@ -44,7 +49,10 @@ public class SwerveSubsystem extends SubsystemBase{
         }
 
             
-    
+    public boolean allianceCheck(){
+        if (alliance.isPresent() && (alliance.get() == Alliance.Red)) {isRedAlliance = true;}else{isRedAlliance = false;}
+        return isRedAlliance;
+    }
         
     //gyro int and heading code
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
@@ -87,6 +95,16 @@ public class SwerveSubsystem extends SubsystemBase{
     }
     
     public void setModuleStates(ChassisSpeeds speeds){
+        SwerveModuleState[] moduleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        frontRightModule.setDesiredState(moduleStates[0]);
+        frontLeftModule.setDesiredState(moduleStates[1]);
+        backRightModule.setDesiredState(moduleStates[2]);
+        backLeftModule.setDesiredState(moduleStates[3]);
+    }
+
+    public void driveRobotRelative(ChassisSpeeds speeds){
+        // ChassisSpeeds.fromRobotRelativeSpeeds(speeds, geRotation2d());
         SwerveModuleState[] moduleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         frontRightModule.setDesiredState(moduleStates[0]);

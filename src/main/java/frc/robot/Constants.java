@@ -5,9 +5,13 @@
 package frc.robot;
 
 
+import java.util.HashMap;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -20,10 +24,9 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static final class DriveConstants {
 
-    //TODO Input trackWidth and WheelBase measurements
-    public static final double kTrackWidth = Units.inchesToMeters(24);
+    public static final double kTrackWidth = Units.inchesToMeters(17.5);
       // Distance between right and left wheels
-    public static final double kWheelBase = Units.inchesToMeters(24);
+    public static final double kWheelBase = Units.inchesToMeters(17.5);
       // Distance between front and back wheels
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
       new Translation2d(kWheelBase / 2, -kTrackWidth / 2), //front left
@@ -32,7 +35,6 @@ public final class Constants {
         new Translation2d(-kWheelBase / 2, kTrackWidth / 2)); //back right
 
 
-    //TODO Configure all motor controller CAN Bus ports
     //start front front left to front right to back right and all drives then all steers then all absolutes
     public static final int kFrontLeftDriveMotorPort = 1;
     public static final int kFrontLeftTurningMotorPort = 2;
@@ -104,6 +106,64 @@ public final class Constants {
     public static final int kRightStickPort = 2;
   }
  
+
+  public static final class AutoConstants {
+    public static final double kMaxSpeedMetersPerSecond = DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+    public static final double kMaxAngularSpeedRadiansPerSecond =  DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+    public static final double kMaxAccelerationMetersPerSecondSquared = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond;
+    public static final double kMaxAngularAccelerationUnitsPerSecond = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond;
+
+    public static  double kPTranslation = 5;
+    public static  double kITranslation = 0;
+    public static  double kDTranslation = 0;
+
+    public static final double kPTheta = 5;
+    public static final double kITheta = 0;
+    public static final double kDTheta = 0;
+
+
+    public static final HashMap<String, Command> AUTO_EVENT_MAP = new HashMap<>();
+
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = 
+            new TrapezoidProfile.Constraints(
+                    kMaxAngularSpeedRadiansPerSecond,
+                    kMaxAngularAccelerationUnitsPerSecond);
+    public static final TrapezoidProfile.Constraints kLinearConstraints = 
+            new TrapezoidProfile.Constraints(
+                kMaxSpeedMetersPerSecond,
+                kMaxAccelerationMetersPerSecondSquared
+            );
+  }
+
+  public static final class AprilTagIds{
+    public static final int blueSourceRight = 1;
+    public static final int blueSourceLeft = 2;
+    public static final int redSpeakerRight = 3;
+    public static final int redSpeakerLeft = 3;
+    public static final int redAmp = 5;
+    public static final int blueAmp = 6;
+    public static final int blueSpeakerRight = 7;
+    public static final int blueSpeakerLeft = 8;
+    public static final int redSourceRight = 9;
+    public static final int redSourceLeft = 10;
+    public static final int redStageSource = 11;
+    public static final int redStageAmp = 12;
+    public static final int redStageCenter = 13;
+    public static final int blueStageCenter = 14;
+    public static final int blueStageAmp = 15;
+    public static final int blueStageSource = 16;
+  }
+
+  public static final class limelightConstants{
+    public static final double thetakP = 3.0;
+    public static final double thetakI = 0;
+    public static final double thetakD = 0;
+
+    public static final double linearkP = 0.4;
+    public static final double linearkI = 0;
+    public static final double linearkD = 0;
+    public static final double angleOffset = 35; //degrees
+  }
 
 
 }
