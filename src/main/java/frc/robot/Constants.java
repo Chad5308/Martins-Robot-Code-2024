@@ -76,7 +76,7 @@ public final class Constants {
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond =kPhysicalMaxSpeedMetersPerSecond/(kTrackWidth/2);
 
     //For limiting speed while driving
-    public static final double kTeleDriveSpeedLimiter = 0.5; //Percentile of max speed
+    public static final double kTeleDriveSpeedLimiter = 1; //Percentile of max speed
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * kTeleDriveSpeedLimiter;  
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond * kTeleDriveSpeedLimiter;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
