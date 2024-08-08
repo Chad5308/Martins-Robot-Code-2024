@@ -4,7 +4,6 @@ package frc.robot.DriveFiles;
 import java.util.Optional;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -13,7 +12,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -63,20 +61,14 @@ public class SwerveSubsystem extends SubsystemBase{
     }
         
     //gyro int and heading code
-    private AHRS gyro = new AHRS(SPI.Port.kMXP);
     public Pigeon2 pigeon2 = new Pigeon2(13);
     public void zeroHeading() {
-        gyro.reset();
-        gyro.setAngleAdjustment(0);
-
         pigeon2.reset();
     }
     public double getHeading() {
-        // return Math.IEEEremainder(-gyro.getAngle(), 360);
         return -pigeon2.getAngle();
     }
     public Rotation2d geRotation2d() {
-        // return Rotation2d.fromDegrees(getHeading());
         return pigeon2.getRotation2d();
     }
 
