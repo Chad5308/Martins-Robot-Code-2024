@@ -11,6 +11,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.DriveFiles.DriveCommand;
 import frc.robot.DriveFiles.LimelightSubsystem;
 import frc.robot.DriveFiles.SwerveSubsystem;
+import frc.robot.Subsystems.LightSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -40,12 +41,13 @@ public class RobotContainer {
   private SendableChooser<Command> controlType;
 
   public static Robot robot = new Robot();
-  public SwerveSubsystem s_Swerve = new SwerveSubsystem();
+  public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot);
   public LimelightSubsystem s_Limelight = new LimelightSubsystem(s_Swerve);
   public DriveCommand c_Drive = new DriveCommand(s_Swerve, opController, leftStick, rightStick);
   public ShooterCommand c_Shooter = new ShooterCommand();
   public IntakeCommand c_Intake = new IntakeCommand();
   public AutoCommand c_AutoCommand = new AutoCommand(c_Drive, s_Swerve, s_Limelight);
+  public LightSubsystem lights = new LightSubsystem();
   private SendableChooser<Command> autoChooser;
 
 

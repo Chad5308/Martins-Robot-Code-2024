@@ -3,6 +3,7 @@ package frc.robot.DriveFiles;
 
 import java.util.Optional;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,14 +19,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Constants.OIConstants;
+
+
 
 public class SwerveSubsystem extends SubsystemBase{
     public final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
+    public Robot robot;
     public boolean fieldOriented = false;
     public boolean hasReset = false;
     public boolean isRedAlliance;
     Optional<Alliance> alliance;
+  
     
     public static SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDegrees, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
     public static SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDegrees, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
@@ -33,12 +39,14 @@ public class SwerveSubsystem extends SubsystemBase{
     public static SwerveModule backLeftModule = new SwerveModule(Constants.DriveConstants.kBackLeftTurningMotorPort, Constants.DriveConstants.kBackLeftDriveMotorPort, Constants.DriveConstants.kBackLeftDriveEncoderReversed, Constants.DriveConstants.kBackLeftTurningEncoderReversed, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDegrees, Constants.DriveConstants.kBackLeftTurningEncoderReversed);
     
 
-    public SwerveSubsystem() {
+    public SwerveSubsystem(Robot robot) {
         new Thread(() -> {
             try {
                 Thread.sleep(500);
                 zeroHeading();
-            } catch (Exception e) {}}).start();          
+            } catch (Exception e) {}}).start();       
+            this.robot = robot;
+            alliance = robot.getAlliance();
         }
         
         public void resetPositions(SwerveModule FL, SwerveModule FR, SwerveModule BL, SwerveModule BR){
@@ -56,15 +64,20 @@ public class SwerveSubsystem extends SubsystemBase{
         
     //gyro int and heading code
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
+    public Pigeon2 pigeon2 = new Pigeon2(13);
     public void zeroHeading() {
         gyro.reset();
         gyro.setAngleAdjustment(0);
+
+        pigeon2.reset();
     }
     public double getHeading() {
-        return Math.IEEEremainder(-gyro.getAngle(), 360);
+        // return Math.IEEEremainder(-gyro.getAngle(), 360);
+        return -pigeon2.getAngle();
     }
     public Rotation2d geRotation2d() {
-        return Rotation2d.fromDegrees(getHeading());
+        // return Rotation2d.fromDegrees(getHeading());
+        return pigeon2.getRotation2d();
     }
 
     //Odometer code
