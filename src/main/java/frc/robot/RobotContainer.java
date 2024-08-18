@@ -47,7 +47,7 @@ public class RobotContainer {
   public ShooterCommand c_Shooter = new ShooterCommand();
   public IntakeCommand c_Intake = new IntakeCommand();
   public AutoCommand c_AutoCommand = new AutoCommand(c_Drive, s_Swerve, s_Limelight);
-  public LightSubsystem lights = new LightSubsystem();
+  public LightSubsystem lights = new LightSubsystem(robot, s_Swerve);
   private SendableChooser<Command> autoChooser;
 
 

@@ -76,7 +76,7 @@ public final class Constants {
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond =kPhysicalMaxSpeedMetersPerSecond/(kTrackWidth/2);
 
     //For limiting speed while driving
-    public static final double kTeleDriveSpeedLimiter = 1; //Percentile of max speed
+    public static final double kTeleDriveSpeedLimiter = 1; //TOO LIMIT SPEED CHANGE THIS
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * kTeleDriveSpeedLimiter;  
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond * kTeleDriveSpeedLimiter;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
@@ -164,6 +164,68 @@ public final class Constants {
     public static final double linearkI = 0;
     public static final double linearkD = 0;
     public static final double angleOffset = 35; //degrees
+  }
+
+
+  public static final class IntakeConstants{
+    public static final int boreEncoderPort = 1;
+    public static final int intakeMotorID = 20;
+    public static final int pitchMotorID = 21;
+    public static final boolean pitchMotorReversed = false;
+    public static final boolean intakeMotorReversed = false;
+
+    public static final double kP_pitch = 0.008;
+    public static final double kI_pitch = 0.0000008;
+    public static final double kD_pitch = 0.03;
+
+    public static final double kP_intake = 1.0;
+    public static final double kI_intake = 0;
+    public static final double kD_intake = 0.0;
+
+  }
+
+  public static final class ShooterConstants{
+//CAN Bus Numbers
+public static final int topMotorID = 30;
+public static final int bottomMotorID = 31;
+public static final int breachMotorID = 32;
+public static final int PitchEncoderID = 33;
+
+
+public static final double ramp_rate = 0.1;
+
+
+//PID Values
+public static final double kS_TopShooter = 0.4;
+public static final double kV_TopShooter = 0.12;
+public static final double kA_TopShooter = 0.1;
+public static final double kP_TopShooter = 1.0;
+public static final double kI_TopShooter = 0;
+public static final double kD_TopShooter = 0.01;
+
+public static final double kS_BottomShooter = 0.4;
+public static final double kV_BottomShooter = 0.12;
+public static final double kA_BottomShooter = 0.1;
+public static final double kP_BottomShooter = 1.0;
+public static final double kI_BottomShooter = 0;
+public static final double kD_BottomShooter = 0.01;
+
+public static final double kP_pitch = 0.008;
+public static final double kI_pitch = 0.0000008;
+public static final double kD_pitch = 0.03;
+
+public static final double kP_breach = 0.01;
+public static final double kI_breach = 0;
+public static final double kD_breach = 0;
+
+//Encoder values
+public static final boolean topMotorReversed = false;
+public static final boolean bottomMotorReversed = false;
+public static final boolean breachReversed = false;
+public static final boolean pitchReversed = false;
+
+public static final int breachSwitchPort = 0;
+
   }
 
 

@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,6 +25,7 @@ import frc.robot.Constants.OIConstants;
 
 public class SwerveSubsystem extends SubsystemBase{
     public final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
+    public DriverStation d_Station;
     public Robot robot;
     public boolean fieldOriented = false;
     public boolean hasReset = false;
@@ -44,7 +46,7 @@ public class SwerveSubsystem extends SubsystemBase{
                 zeroHeading();
             } catch (Exception e) {}}).start();       
             this.robot = robot;
-            alliance = robot.getAlliance();
+            alliance = getAlliance();
         }
         
         public void resetPositions(SwerveModule FL, SwerveModule FR, SwerveModule BL, SwerveModule BR){
@@ -58,6 +60,10 @@ public class SwerveSubsystem extends SubsystemBase{
     public boolean allianceCheck(){
         if (alliance.isPresent() && (alliance.get() == Alliance.Red)) {isRedAlliance = true;}else{isRedAlliance = false;}
         return isRedAlliance;
+    }
+
+    public Optional<Alliance> getAlliance(){
+        return DriverStation.getAlliance();
     }
         
     //gyro int and heading code
@@ -81,7 +87,7 @@ public class SwerveSubsystem extends SubsystemBase{
         resetPositions(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
         // odometer.resetPosition(geRotation2d(), getPositions(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition()), new Pose2d());
         odometer.resetPosition(geRotation2d(), getPositions(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition()), pose);
-    hasReset = true;
+        hasReset = true;
     }
     public Pose2d getPose() {
         return odometer.getPoseMeters();
@@ -155,6 +161,8 @@ public class SwerveSubsystem extends SubsystemBase{
                 backLeftModule.getPosition())
             );
 
+            alliance = getAlliance();
+
 
         
         
@@ -185,5 +193,7 @@ public class SwerveSubsystem extends SubsystemBase{
             //  frModPos = new SwerveModulePosition(frontRightModule.getPositionMeters(), frontRightModule.gState().angle);
             //  blModPos = new SwerveModulePosition(backLeftModule.getPositionMeters(), backLeftModule.gState().angle);
             //  brModPos = new SwerveModulePosition(backRightModule.getPositionMeters(), backRightModule.gState().angle);
+
+            SmartDashboard.putBoolean("Allience", isRedAlliance);
         }
 }

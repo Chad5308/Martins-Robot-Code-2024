@@ -76,7 +76,5 @@ public class Robot extends TimedRobot {
   public void testExit() {}
 
 
-   public Optional<Alliance> getAlliance(){
-    return DriverStation.getAlliance();
-  }
+   
 }
