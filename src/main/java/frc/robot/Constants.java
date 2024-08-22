@@ -163,7 +163,7 @@ public final class Constants {
     public static final double linearkP = 0.4;
     public static final double linearkI = 0;
     public static final double linearkD = 0;
-    public static final double angleOffset = 35; //degrees
+    public static final double angleOffset = 35; //degrees TODO Find this value
   }
 
 
@@ -185,48 +185,56 @@ public final class Constants {
   }
 
   public static final class ShooterConstants{
-//CAN Bus Numbers
-public static final int topMotorID = 30;
-public static final int bottomMotorID = 31;
-public static final int breachMotorID = 32;
-public static final int PitchEncoderID = 33;
+  //CAN Bus Numbers
+    public static final int topMotorID = 30;
+    public static final int bottomMotorID = 31;
+    public static final int breachMotorID = 32;
+    public static final int PitchEncoderID = 33;
 
 
-public static final double ramp_rate = 0.1;
+    public static final double ramp_rate = 0.1;
 
 
-//PID Values
-public static final double kS_TopShooter = 0.4;
-public static final double kV_TopShooter = 0.12;
-public static final double kA_TopShooter = 0.1;
-public static final double kP_TopShooter = 1.0;
-public static final double kI_TopShooter = 0;
-public static final double kD_TopShooter = 0.01;
+    //PID Values
+    public static final double kS_TopShooter = 0.4;
+    public static final double kV_TopShooter = 0.12;
+    public static final double kA_TopShooter = 0.1;
+    public static final double kP_TopShooter = 1.0;
+    public static final double kI_TopShooter = 0;
+    public static final double kD_TopShooter = 0.01;
 
-public static final double kS_BottomShooter = 0.4;
-public static final double kV_BottomShooter = 0.12;
-public static final double kA_BottomShooter = 0.1;
-public static final double kP_BottomShooter = 1.0;
-public static final double kI_BottomShooter = 0;
-public static final double kD_BottomShooter = 0.01;
+    public static final double kS_BottomShooter = 0.4;
+    public static final double kV_BottomShooter = 0.12;
+    public static final double kA_BottomShooter = 0.1;
+    public static final double kP_BottomShooter = 1.0;
+    public static final double kI_BottomShooter = 0;
+    public static final double kD_BottomShooter = 0.01;
 
-public static final double kP_pitch = 0.008;
-public static final double kI_pitch = 0.0000008;
-public static final double kD_pitch = 0.03;
+    public static final double kP_pitch = 0.008;
+    public static final double kI_pitch = 0.0000008;
+    public static final double kD_pitch = 0.03;
 
-public static final double kP_breach = 0.01;
-public static final double kI_breach = 0;
-public static final double kD_breach = 0;
+    public static final double kP_breach = 0.01;
+    public static final double kI_breach = 0;
+    public static final double kD_breach = 0;
 
-//Encoder values
-public static final boolean topMotorReversed = false;
-public static final boolean bottomMotorReversed = false;
-public static final boolean breachReversed = false;
-public static final boolean pitchReversed = false;
+    //Encoder values
+    public static final boolean topMotorReversed = false;
+    public static final boolean bottomMotorReversed = false;
+    public static final boolean breachReversed = false;
+    public static final boolean pitchReversed = false;
 
-public static final int breachSwitchPort = 0;
+    public static final int breachSwitchPort = 0;
 
-  }
+
+     //Known Angles TODO Find these values after testing
+     public static final double sourceAngle = 0;
+     public static final double closeSpeakerAngle = 0;
+     public static final double podiumSpeakerAngle = 0;
+     public static final double path2Angle = 0;
+}
+
+
 
 
 }

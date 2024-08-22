@@ -13,6 +13,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,7 +37,7 @@ public class ShooterSubsystem extends SubsystemBase{
     public final SparkPIDController breachMotorPID;
     public final SparkPIDController pitchMotorPID;
 
-    public DigitalInput breachSwitch;
+    public AnalogInput breachSwitch;
 
     //Unit in Rotations per second
     double desiredTopVelocity = 0;
@@ -62,8 +63,12 @@ public class ShooterSubsystem extends SubsystemBase{
     velocityRequest = new VelocityVoltage(0).withSlot(0);
     motionMagicRequest = new MotionMagicVelocityVoltage(0);
         
-    breachSwitch = new DigitalInput(Constants.ShooterConstants.breachSwitchPort);
+    breachSwitch = new AnalogInput(Constants.ShooterConstants.breachSwitchPort);
     configure();
+
+
+
+    
     }
 
 
@@ -104,7 +109,7 @@ public class ShooterSubsystem extends SubsystemBase{
     breachMotorPID.setD(Constants.ShooterConstants.kD_breach);
     breachMotor.setInverted(Constants.ShooterConstants.breachReversed);
     breachMotor.setOpenLoopRampRate(Constants.ShooterConstants.ramp_rate);
-    breachMotor.setIdleMode(IdleMode.kCoast);
+    breachMotor.setIdleMode(IdleMode.kBrake);
 
     //Pitch Motor Config
     pitchMotor.restoreFactoryDefaults();
@@ -131,7 +136,7 @@ public class ShooterSubsystem extends SubsystemBase{
     
     public void setShootingNeutralOutput() {
         topMotor.setControl(neutralOut);
-        bottomMotor.setControl(new NeutralOut());
+        bottomMotor.setControl(neutralOut); //Or new NeutralOut()
     }
     
     public double getTopShooterVelocity() {
@@ -161,6 +166,10 @@ public class ShooterSubsystem extends SubsystemBase{
         breachMotor.set(0.5);
     }
 
+    public void stopFeed(){
+        breachMotor.set(0);
+    }
+
 
 
 
@@ -186,6 +195,18 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
 
+
+
+    //Breach Switch Code
+    public boolean isObject(){
+        double sensorValue = breachSwitch.getVoltage();
+        double scaleFactor = 1/(5./1024.); //scale converting voltage to distance
+        double distance = 5*sensorValue*scaleFactor; //convert the voltage to distance
+        boolean objectDetected = distance <= 7? true: false;
+        return objectDetected;
+    }
+
+
     @Override
     public void periodic(){
         getUpToSpeed();
@@ -193,6 +214,8 @@ public class ShooterSubsystem extends SubsystemBase{
 
 
         SmartDashboard.putNumber("ShooterPosition", getPosition());
+        SmartDashboard.putBoolean("Is Game Piece", isObject());
+        SmartDashboard.putNumber("Ultrasonic Raw Numbers", (breachSwitch.getVoltage() * 5 * (1/(5/1024))));
         // SmartDashboard.putNumber("Shooter/Top/Velocity RPS", getTopShooterVelocity());
         // SmartDashboard.putNumber("Shooter/Top/Desired Velocity RPS", desiredTopVelocity);
         // SmartDashboard.putBoolean("Shooter/Top/Up to Speed", isTopShooterUpToSpeed());

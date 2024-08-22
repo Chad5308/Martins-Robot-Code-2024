@@ -1,6 +1,8 @@
-package frc.robot.DriveFiles;
+package frc.robot.Subsystems;
 
 import java.util.Optional;
+
+import org.opencv.core.Mat;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,10 +13,12 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.DriveFiles.SwerveSubsystem;
 
 public class LimelightSubsystem extends SubsystemBase{
     
 public SwerveSubsystem s_swerve;
+public ShooterSubsystem s_Shooter;
 public NetworkTable networkTables;
 public IntegerSubscriber pipeline;
 public IntegerPublisher pipelinePublisher;
@@ -31,8 +35,9 @@ public ProfiledPIDController ZPIDController;
 public ProfiledPIDController XPIDController;
 public boolean autoAlign = false;
 
-    public LimelightSubsystem(SwerveSubsystem s_swerve){
+    public LimelightSubsystem(SwerveSubsystem s_swerve, ShooterSubsystem s_Shooter){
         this.s_swerve = s_swerve;
+        this.s_Shooter = s_Shooter;
 
 // NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").getDouble(0);
 
@@ -64,38 +69,39 @@ public boolean autoAlign = false;
         XPIDController.setTolerance(0.25);
     }
   
-    // public double autoAngle(){
-    //     if (targetID == Constants.AprilTagIds.redSpeakerLeft || targetID == Constants.AprilTagIds.blueSpeakerLeft) {
-    //         double temp = 0;
-    //         double distanceAway = 0;
-    //         double fixedVerticalOffsetDistance = 18; //+ == degrees up
-    //         double verticalAngleMultiplier= 0.7;// varies the range of degrees of travel [Closer value to move the shooter more vertical]
+    public double autoAngle(){
+        if (targetID == Constants.AprilTagIds.redSpeakerLeft || targetID == Constants.AprilTagIds.blueSpeakerLeft) {
 
-    //         distanceAway = (53 + 7/8 - 10.5) / Math.tan(yAng);
+            //TODO Find limelight mount angle
+            double targetHeight = 57.125; //Inches From ground to middle of tag (See April Tag Manuel for dimensions)
+            double cameraHeight = 1; //Find Camera height (ground to lens)
+            double distance2Target = ((targetHeight-cameraHeight)/ (Math.tan(yAng)));//Inches
 
-    //         temp = -1*(90-(fixedVerticalOffsetDistance+(verticalAngleMultiplier*(Math.toDegrees(Math.atan((77-20)/(distanceAway-9.5)))))));
-    //         return temp;
-    //     }else {
-    //         return pitchSubsystem.getPosition();
-    //     }
-    // }
+            double targetHeight2Hood = 23.541; //Inches
+            double finalAngle = Math.toDegrees(Math.atan((targetHeight2Hood+targetHeight)/distance2Target));
 
-    public double autoAlign(){
-        if(autoAlign == true && (targetID == Constants.AprilTagIds.redSpeakerLeft || targetID == Constants.AprilTagIds.blueSpeakerLeft) && !thetaPIDController.atSetpoint()){
-            return (thetaPIDController.getSetpoint().velocity + correctionT);
+            return finalAngle;
         }else {
-            return 0.0;
+            return s_Shooter.getPosition();
         }
     }
+
+    // public double autoAlign(){
+    //     if(autoAlign == true && (targetID == Constants.AprilTagIds.redSpeakerLeft || targetID == Constants.AprilTagIds.blueSpeakerLeft) && !thetaPIDController.atSetpoint()){
+    //         return (thetaPIDController.getSetpoint().velocity + correctionT);
+    //     }else {
+    //         return 0.0;
+    //     }
+    // }
 
 
 @Override
 public void periodic(){
-// if (s_swerve.allianceCheck() == true) {
-//             localizedPose = networkTables.getEntry("botpose_wpired").getDoubleArray(new double[6]);
-// } else {
-//         localizedPose = networkTables.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
-//     }
+    // if (s_swerve.allianceCheck() == true) {
+    //             localizedPose = networkTables.getEntry("botpose_wpired").getDoubleArray(new double[6]);
+    // } else {
+    //         localizedPose = networkTables.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
+    //     }
 
 botPose_targetSpace = networkTables.getEntry("botpose_targetspace").getDoubleArray(new double[6]);
 localizedPose = networkTables.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
