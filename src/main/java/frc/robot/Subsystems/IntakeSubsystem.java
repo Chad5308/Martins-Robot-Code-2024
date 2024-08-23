@@ -17,8 +17,6 @@ import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase{
     
-    public DigitalInput boreEncoder = new DigitalInput(Constants.IntakeConstants.boreEncoderPort);
-
     public CANSparkMax pitchMotor;
     public CANSparkMax intakeMotor;
 
@@ -74,14 +72,6 @@ public class IntakeSubsystem extends SubsystemBase{
         pitchMotorPID.setReference(degrees, ControlType.kPosition);
     }
 
-    public void home(){
-        pitchMotorPID.setReference(0, ControlType.kPosition);
-    }
-
-    public void deploy(){
-        setPosition(125);//TODO Check Value
-    }
-
     public void gravity(){
         pitchMotorPID.setP((0.001 * Math.sin(Math.toRadians(pitchMotorEncoder.getPosition()))) + Constants.IntakeConstants.kP_pitch);//TODO Make sure the gravity constant is working
     }
@@ -91,8 +81,8 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     //Intake Methods
-    public void intake(){
-        intakeMotor.set(0.5);
+    public void setIntakeSpeed(double speed){
+       intakeMotor.set(speed);
     }
 
 

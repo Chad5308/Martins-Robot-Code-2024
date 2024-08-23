@@ -37,7 +37,6 @@ public class ShooterSubsystem extends SubsystemBase{
     public final SparkPIDController breachMotorPID;
     public final SparkPIDController pitchMotorPID;
 
-    public AnalogInput breachSwitch;
 
     //Unit in Rotations per second
     double desiredTopVelocity = 0;
@@ -63,7 +62,6 @@ public class ShooterSubsystem extends SubsystemBase{
     velocityRequest = new VelocityVoltage(0).withSlot(0);
     motionMagicRequest = new MotionMagicVelocityVoltage(0);
         
-    breachSwitch = new AnalogInput(Constants.ShooterConstants.breachSwitchPort);
     configure();
 
 
@@ -160,17 +158,19 @@ public class ShooterSubsystem extends SubsystemBase{
         this.desiredTopVelocity = desiredTopVelocity;
         this.desiredBottomVelocity = desiredBottomVelocity;
     }
+
+    public double autoSpeeds(){
+        if(getPosition()<12){
+            return 0;
+        }
+        double speeds = 90 - Math.sqrt(10*getPosition() - 100);  //Made a graph in Desmos. f(x) = 90 - sqrt(10x - 100)
+        return speeds;
+    }
     
     //Breach Methods
-    public void feed(){
-        breachMotor.set(0.5);
+    public void setBreach(double speed){
+        breachMotor.set(speed);
     }
-
-    public void stopFeed(){
-        breachMotor.set(0);
-    }
-
-
 
 
     //Pitch Methods
@@ -197,25 +197,15 @@ public class ShooterSubsystem extends SubsystemBase{
 
 
 
-    //Breach Switch Code
-    public boolean isObject(){
-        double sensorValue = breachSwitch.getVoltage();
-        double scaleFactor = 1/(5./1024.); //scale converting voltage to distance
-        double distance = 5*sensorValue*scaleFactor; //convert the voltage to distance
-        boolean objectDetected = distance <= 7? true: false;
-        return objectDetected;
-    }
+   
 
 
     @Override
     public void periodic(){
         getUpToSpeed();
         getPosition();
-
-
+        
         SmartDashboard.putNumber("ShooterPosition", getPosition());
-        SmartDashboard.putBoolean("Is Game Piece", isObject());
-        SmartDashboard.putNumber("Ultrasonic Raw Numbers", (breachSwitch.getVoltage() * 5 * (1/(5/1024))));
         // SmartDashboard.putNumber("Shooter/Top/Velocity RPS", getTopShooterVelocity());
         // SmartDashboard.putNumber("Shooter/Top/Desired Velocity RPS", desiredTopVelocity);
         // SmartDashboard.putBoolean("Shooter/Top/Up to Speed", isTopShooterUpToSpeed());

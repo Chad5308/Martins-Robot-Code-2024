@@ -168,9 +168,10 @@ public final class Constants {
 
 
   public static final class IntakeConstants{
-    public static final int boreEncoderPort = 1;
     public static final int intakeMotorID = 20;
     public static final int pitchMotorID = 21;
+    public static final int intakeSwitchID = 1;
+
     public static final boolean pitchMotorReversed = false;
     public static final boolean intakeMotorReversed = false;
 
@@ -190,6 +191,7 @@ public final class Constants {
     public static final int bottomMotorID = 31;
     public static final int breachMotorID = 32;
     public static final int PitchEncoderID = 33;
+    public static final int shooterSwitchID = 0;
 
 
     public static final double ramp_rate = 0.1;
@@ -224,7 +226,6 @@ public final class Constants {
     public static final boolean breachReversed = false;
     public static final boolean pitchReversed = false;
 
-    public static final int breachSwitchPort = 0;
 
 
      //Known Angles TODO Find these values after testing

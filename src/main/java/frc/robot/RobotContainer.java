@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Commands.AutoCommand;
 import frc.robot.Commands.IntakeCommand;
+import frc.robot.Commands.AutonomyCommand;
 import frc.robot.Commands.ShooterCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.DriveFiles.DriveCommand;
@@ -52,6 +53,7 @@ public class RobotContainer {
   public IntakeCommand c_Intake = new IntakeCommand(s_Intake);
   public AutoCommand c_AutoCommand = new AutoCommand(c_Drive, s_Swerve, s_Limelight);
   public LightSubsystem lights = new LightSubsystem(robot, s_Swerve);
+  public AutonomyCommand c_Detection = new AutonomyCommand(c_Shooter, c_Intake);
   private SendableChooser<Command> autoChooser;
 
 
@@ -95,7 +97,21 @@ public RobotContainer() {
     rightStick.button(2).onTrue(s_Swerve.resetWheels()); //window looking button
    
  
-    //test for PID
-    // shootController.y().onTrue(Commands.runOnce(() -> {pitchSubsystem.setPosition(Constants.ShooterConstants.closeSpeakerAngle);}));
+
+    //Intake Controls
+
+
+
+
+
+
+    //Shooter Controls
+
+    opController.rightStick().whileTrue(c_Shooter.launch());
+    opController.leftStick().whileTrue(c_Shooter.prepareShot());
+    
+    opController.leftBumper().whileTrue(c_Intake.deploy());
+
+    opController.x().onTrue(c_Detection.switchMode());
   }
 }
