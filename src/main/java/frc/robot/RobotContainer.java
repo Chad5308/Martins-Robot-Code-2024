@@ -113,5 +113,9 @@ public RobotContainer() {
     opController.leftBumper().whileTrue(c_Intake.deploy());
 
     opController.x().onTrue(c_Detection.switchMode());
+
+    opController.y().onTrue(c_Shooter.podiumShot().unless(c_Detection::getMode));
+    opController.b().onTrue(c_Shooter.closeSpeaker().unless(c_Detection::getMode));
+    opController.a().onTrue(c_Shooter.setHome().unless(c_Detection::getMode).alongWith(c_Shooter.stopBreach().unless(c_Detection::getMode)));
   }
 }

@@ -59,7 +59,6 @@ public class ShooterCommand extends Command{
     public Command setHome(){
         return Commands.runOnce(()->{
             s_Shooter.setDesiredVelocities(0, 0);
-            stopBreach();
             s_Shooter.home();
         });
     }
@@ -76,6 +75,7 @@ public class ShooterCommand extends Command{
             s_Shooter.setPosition(s_Limelight.autoAngle());
         });
     }
+
 
 
 

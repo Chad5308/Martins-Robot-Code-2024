@@ -31,6 +31,10 @@ public class AutonomyCommand extends Command{
         return intakeSwitch.get();
     }
 
+    public boolean getMode(){
+        return controlMode;
+    }
+
     public Command switchMode(){
         return Commands.runOnce(()-> {
         controlMode = !controlMode;
@@ -46,7 +50,7 @@ public class AutonomyCommand extends Command{
             
         
         c_Shooter.setHome().onlyWhile(() -> !c_Shooter.prepareShot().isScheduled() && controlMode == true);
-        c_Shooter.feed().until(this::getShooter).onlyWhile(() -> controlMode == true && c_Intake.deploy().isScheduled());
+        c_Shooter.feed().until(this::getShooter).onlyWhile(() -> controlMode == true && c_Intake.deploy().isScheduled()).andThen(c_Shooter.stopBreach());
         c_Intake.home().onlyWhile(() -> controlMode == true && !c_Intake.deploy().isScheduled() && !getIntake());
 
     }
