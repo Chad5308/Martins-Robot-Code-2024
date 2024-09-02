@@ -38,6 +38,12 @@ public class IntakeSubsystem extends SubsystemBase{
         pitchMotor = new CANSparkMax(Constants.IntakeConstants.pitchMotorID, MotorType.kBrushless);
         pitchMotorEncoder = pitchMotor.getAbsoluteEncoder();
         pitchMotorPID = pitchMotor.getPIDController();
+
+        
+        intakeMotor = new CANSparkMax(Constants.IntakeConstants.intakeMotorID, MotorType.kBrushless);
+        intakeMotorEncoder = intakeMotor.getEncoder();
+        intakeMotorPID = intakeMotor.getPIDController();
+
         configure();
     }
 
