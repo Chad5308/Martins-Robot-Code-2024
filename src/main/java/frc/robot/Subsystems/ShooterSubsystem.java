@@ -166,6 +166,10 @@ public class ShooterSubsystem extends SubsystemBase{
         double speeds = 90 - Math.sqrt(10*getPosition() - 100);  //Made a graph in Desmos. f(x) = 90 - sqrt(10x - 100)
         return speeds;
     }
+
+    public void speedUpShooter(){
+        setDesiredVelocities(60, 0);
+    }
     
     //Breach Methods
     public void setBreach(double speed){

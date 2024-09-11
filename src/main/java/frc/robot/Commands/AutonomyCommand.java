@@ -48,10 +48,10 @@ public class AutonomyCommand extends Command{
     public void execute(){
         
             
-        
-        c_Shooter.setHome().onlyWhile(() -> !c_Shooter.prepareShot().isScheduled() && controlMode == true);
-        c_Shooter.feed().until(this::getShooter).onlyWhile(() -> controlMode == true && c_Intake.deploy().isScheduled()).andThen(c_Shooter.stopBreach());
-        c_Intake.home().onlyWhile(() -> controlMode == true && !c_Intake.deploy().isScheduled() && !getIntake());
+        //TODO Take this out
+        // c_Shooter.setHome().onlyWhile(() -> !c_Shooter.prepareShot().isScheduled() && controlMode == true);
+        // c_Shooter.feed().until(this::getShooter).onlyWhile(() -> controlMode == true && c_Intake.deploy().isScheduled()).andThen(c_Shooter.stopBreach());
+        // c_Intake.home().onlyWhile(() -> controlMode == true && !c_Intake.deploy().isScheduled() && !getIntake());
 
     }
 

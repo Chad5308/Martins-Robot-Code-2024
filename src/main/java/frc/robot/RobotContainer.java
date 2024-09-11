@@ -102,20 +102,24 @@ public RobotContainer() {
 
 
 
+opController.a().whileTrue(c_Shooter.test());
+opController.a().whileFalse(c_Shooter.setHome());
 
 
 
     //Shooter Controls
 
-    opController.rightStick().whileTrue(c_Shooter.launch());
-    opController.leftStick().whileTrue(c_Shooter.prepareShot());
+    // opController.rightStick().whileTrue(c_Shooter.launch());
+    // opController.leftStick().whileTrue(c_Shooter.prepareShot());
     
-    opController.leftBumper().whileTrue(c_Intake.deploy());
+    // opController.leftBumper().whileTrue(c_Intake.deploy());
 
-    opController.x().onTrue(c_Detection.switchMode());
+    // opController.x().onTrue(c_Detection.switchMode());
 
-    opController.y().onTrue(c_Shooter.podiumShot().unless(c_Detection::getMode));
-    opController.b().onTrue(c_Shooter.closeSpeaker().unless(c_Detection::getMode));
-    opController.a().onTrue(c_Shooter.setHome().unless(c_Detection::getMode).alongWith(c_Shooter.stopBreach().unless(c_Detection::getMode)));
+    // opController.y().onTrue(c_Shooter.podiumShot().unless(c_Detection::getMode));
+    // opController.b().onTrue(c_Shooter.closeSpeaker().unless(c_Detection::getMode));
+    // opController.a().onTrue(c_Shooter.setHome().unless(c_Detection::getMode).alongWith(c_Shooter.stopBreach().unless(c_Detection::getMode)));
+
+
   }
 }

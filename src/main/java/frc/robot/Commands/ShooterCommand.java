@@ -48,6 +48,14 @@ public class ShooterCommand extends Command{
     }
 
 
+    public Command test(){
+        return Commands.runOnce(()->{
+            s_Shooter.speedUpShooter();
+        });
+    }
+
+
+
     // Autonomy Commands
 
     public Command feed(){
@@ -59,7 +67,8 @@ public class ShooterCommand extends Command{
     public Command setHome(){
         return Commands.runOnce(()->{
             s_Shooter.setDesiredVelocities(0, 0);
-            s_Shooter.home();
+            // s_Shooter.home();
+            //TODO take out
         });
     }
 
