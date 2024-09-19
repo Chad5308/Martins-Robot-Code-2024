@@ -14,6 +14,12 @@ public class IntakeCommand extends Command{
         addRequirements(s_Intake);
     }
 
+    @Override
+    public void initialize(){
+        // home();
+    }
+
+
 
     public Command home(){
         return Commands.runOnce(()->{
@@ -26,6 +32,22 @@ public class IntakeCommand extends Command{
         return Commands.runOnce(()->{
             s_Intake.setPosition(125);//TODO Check Value
             s_Intake.setIntakeSpeed(1);
+        });
+    }
+
+    public Command pitchUp()
+    {
+        return Commands.run(() ->
+        {
+            s_Intake.setPosition(s_Intake.getPosition() - 2);
+        });
+    }
+
+    public Command pitchDown()
+    {
+        return Commands.run(() ->
+        {
+            s_Intake.setPosition(s_Intake.getPosition() + 2);
         });
     }
 

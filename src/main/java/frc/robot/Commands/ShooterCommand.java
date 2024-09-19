@@ -1,5 +1,7 @@
 package frc.robot.Commands;
 
+import com.revrobotics.CANSparkBase.ControlType;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
@@ -18,13 +20,11 @@ public class ShooterCommand extends Command{
 
     @Override
     public void initialize(){
-        s_Shooter.home();
+        // s_Shooter.home();
     }
 
     @Override
-    public void execute(){
-    
-    }
+    public void execute(){}
 
    //Manuel Commands
     public Command closeSpeaker(){
@@ -50,7 +50,23 @@ public class ShooterCommand extends Command{
 
     public Command test(){
         return Commands.runOnce(()->{
-            s_Shooter.speedUpShooter();
+            s_Shooter.setDesiredVelocities(50,50);
+        });
+    }
+
+    public Command pitchUp()
+    {
+        return Commands.run(() -> 
+        {
+            s_Shooter.setPosition(s_Shooter.getPosition() + 2);
+        });
+    }
+
+    public Command pitchDown()
+    {
+        return Commands.run(() ->
+        {
+            s_Shooter.setPosition(s_Shooter.getPosition() - 2);
         });
     }
 
@@ -67,8 +83,7 @@ public class ShooterCommand extends Command{
     public Command setHome(){
         return Commands.runOnce(()->{
             s_Shooter.setDesiredVelocities(0, 0);
-            // s_Shooter.home();
-            //TODO take out
+            s_Shooter.home();
         });
     }
 

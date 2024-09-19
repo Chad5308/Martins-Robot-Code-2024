@@ -115,9 +115,11 @@ public class ShooterSubsystem extends SubsystemBase{
     pitchMotorPID.setI(Constants.ShooterConstants.kI_pitch);
     pitchMotorPID.setD(Constants.ShooterConstants.kD_pitch);
     pitchMotor.setInverted(Constants.ShooterConstants.pitchReversed);
-    pitchMotor.setOpenLoopRampRate(5);
+    pitchMotorEncoder.setPositionConversionFactor(360 * Constants.ShooterConstants.gearRatio);
+    pitchMotor.setOpenLoopRampRate(2);
     pitchMotorPID.setSmartMotionMaxVelocity(5, 0);
     pitchMotor.setIdleMode(IdleMode.kBrake);
+
 
 
     }
@@ -166,37 +168,34 @@ public class ShooterSubsystem extends SubsystemBase{
         double speeds = 90 - Math.sqrt(10*getPosition() - 100);  //Made a graph in Desmos. f(x) = 90 - sqrt(10x - 100)
         return speeds;
     }
-
-    public void speedUpShooter(){
-        setDesiredVelocities(60, 0);
-    }
     
     //Breach Methods
     public void setBreach(double speed){
         breachMotor.set(speed);
     }
 
-
     //Pitch Methods
     public void setPosition(double degrees){
         pitchMotorPID.setReference(degrees, ControlType.kPosition);
     }
 
-    public void home(){
-        pitchMotorPID.setReference(0, ControlType.kPosition);
+    public double getPosition(){
+        return pitchMotorEncoder.getPosition();
     }
 
-    public void deploy(){
-        setPosition(65);//TODO Check Value
+    public boolean isHome()
+    {
+        return (getPosition()<=5);
+    }
+   
+    public void home(){
+        pitchMotorPID.setReference(0, ControlType.kPosition);
     }
 
     public void gravity(){
         pitchMotorPID.setP((0.001 * Math.sin(Math.toRadians(pitchMotorEncoder.getPosition()))) + Constants.IntakeConstants.kP_pitch);//TODO Make sure the gravity constant is working
     }
 
-    public double getPosition(){
-        return pitchMotorEncoder.getPosition();
-    }
 
 
 

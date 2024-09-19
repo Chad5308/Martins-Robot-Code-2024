@@ -172,6 +172,8 @@ public final class Constants {
     public static final int pitchMotorID = 21;
     public static final int intakeSwitchID = 1;
 
+    public static final double gearRatio = 12/1; //TODO Check this
+
     public static final boolean pitchMotorReversed = false;
     public static final boolean intakeMotorReversed = false;
 
@@ -192,6 +194,8 @@ public final class Constants {
     public static final int breachMotorID = 32;
     public static final int PitchEncoderID = 33;
     public static final int shooterSwitchID = 0;
+
+    public static final double gearRatio = 20/1; //TODO Check This
 
 
     public static final double ramp_rate = 0.1;

@@ -57,7 +57,7 @@ public class IntakeSubsystem extends SubsystemBase{
         pitchMotorPID.setI(Constants.IntakeConstants.kI_pitch);
         pitchMotorPID.setD(Constants.IntakeConstants.kD_pitch);
 
-        pitchMotorEncoder.setPositionConversionFactor(360); //TODO Multiply by gear ratio of pitch motor when found
+        pitchMotorEncoder.setPositionConversionFactor(360 * Constants.IntakeConstants.gearRatio); //TODO Multiply by gear ratio of pitch motor when found
         pitchMotor.setOpenLoopRampRate(5);
         pitchMotorPID.setSmartMotionMaxVelocity(5, 0);
         pitchMotorEncoder.setZeroOffset(0); //TODO Find this once built
@@ -78,13 +78,14 @@ public class IntakeSubsystem extends SubsystemBase{
         pitchMotorPID.setReference(degrees, ControlType.kPosition);
     }
 
+    public double getPosition(){
+        return pitchMotorEncoder.getPosition();
+    }
+    
     public void gravity(){
         pitchMotorPID.setP((0.001 * Math.sin(Math.toRadians(pitchMotorEncoder.getPosition()))) + Constants.IntakeConstants.kP_pitch);//TODO Make sure the gravity constant is working
     }
 
-    public double getPosition(){
-        return pitchMotorEncoder.getPosition();
-    }
 
     //Intake Methods
     public void setIntakeSpeed(double speed){

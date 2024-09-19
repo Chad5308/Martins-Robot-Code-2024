@@ -60,7 +60,6 @@ public class RobotContainer {
  
 public RobotContainer() {
     s_Swerve.setDefaultCommand(c_Drive);
-    configureBindings();
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);   
@@ -85,7 +84,8 @@ public RobotContainer() {
   }
 
   
-  private void configureBindings() {
+  public void teleopBindings()
+  {
     //Drive Controls
     opController.povRight().toggleOnTrue(Commands.runOnce(() -> s_Swerve.zeroHeading()));
     opController.povLeft().toggleOnTrue(s_Swerve.fieldOrientedToggle());
@@ -99,27 +99,39 @@ public RobotContainer() {
  
 
     //Intake Controls
-
-
-
-opController.a().whileTrue(c_Shooter.test());
-opController.a().whileFalse(c_Shooter.setHome());
+    opController.leftBumper().whileTrue(c_Intake.deploy());
 
 
 
     //Shooter Controls
 
-    // opController.rightStick().whileTrue(c_Shooter.launch());
-    // opController.leftStick().whileTrue(c_Shooter.prepareShot());
+    opController.rightStick().whileTrue(c_Shooter.launch());
+    opController.leftStick().whileTrue(c_Shooter.prepareShot());
     
-    // opController.leftBumper().whileTrue(c_Intake.deploy());
 
-    // opController.x().onTrue(c_Detection.switchMode());
+    opController.x().onTrue(c_Detection.switchMode());
 
-    // opController.y().onTrue(c_Shooter.podiumShot().unless(c_Detection::getMode));
-    // opController.b().onTrue(c_Shooter.closeSpeaker().unless(c_Detection::getMode));
-    // opController.a().onTrue(c_Shooter.setHome().unless(c_Detection::getMode).alongWith(c_Shooter.stopBreach().unless(c_Detection::getMode)));
+    opController.y().onTrue(c_Shooter.podiumShot().unless(c_Detection::getMode));
+    opController.b().onTrue(c_Shooter.closeSpeaker().unless(c_Detection::getMode));
+    opController.a().onTrue(c_Shooter.setHome().unless(c_Detection::getMode).alongWith(c_Shooter.stopBreach().unless(c_Detection::getMode)));
 
+  }
+
+
+  public void testBindings()
+  {
+    opController.rightTrigger().whileTrue(c_Shooter.test());
+    opController.rightBumper().whileTrue(c_Shooter.feed());
+
+    opController.povUp().whileTrue(c_Shooter.pitchUp());//      up
+    opController.povDown().whileTrue(c_Shooter.pitchDown());//  down
+    opController.povLeft().whileTrue(c_Shooter.launch()); //    left
+    opController.povRight().onTrue(c_Shooter.setHome());//      right
+
+    opController.a().whileTrue(c_Intake.pitchDown());//   a.
+    opController.b().onTrue(c_Intake.home());//           b.
+    opController.x().whileTrue(c_Intake.deploy());//      x.
+    opController.y().whileTrue(c_Intake.pitchUp());//     y.
 
   }
 }
