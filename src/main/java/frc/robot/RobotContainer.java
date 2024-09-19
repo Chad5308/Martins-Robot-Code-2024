@@ -120,8 +120,8 @@ public RobotContainer() {
 
   public void testBindings()
   {
-    opController.rightTrigger().whileTrue(c_Shooter.test());
-    opController.rightBumper().whileTrue(c_Shooter.feed());
+    opController.rightTrigger().whileTrue(c_Shooter.test());//  Right trigger
+    opController.rightBumper().whileTrue(c_Shooter.feed());//   Right Bumper
 
     opController.povUp().whileTrue(c_Shooter.pitchUp());//      up
     opController.povDown().whileTrue(c_Shooter.pitchDown());//  down
