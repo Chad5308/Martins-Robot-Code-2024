@@ -39,7 +39,7 @@ public class IntakeCommand extends Command{
     {
         return Commands.run(() ->
         {
-            s_Intake.setPosition(s_Intake.getPosition() - 2);
+            s_Intake.pitchMotor.set(.25);
         });
     }
 
@@ -47,7 +47,7 @@ public class IntakeCommand extends Command{
     {
         return Commands.run(() ->
         {
-            s_Intake.setPosition(s_Intake.getPosition() + 2);
+            s_Intake.pitchMotor.set(-0.25);
         });
     }
 

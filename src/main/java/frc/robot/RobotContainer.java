@@ -40,7 +40,6 @@ public class RobotContainer {
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
   private final CommandJoystick leftStick = new CommandJoystick(OIConstants.kLeftStickPort);
   private final CommandJoystick rightStick = new CommandJoystick(OIConstants.kRightStickPort);
-  public boolean isJoystick = false;
   private SendableChooser<Command> controlType;
 
   public static Robot robot = new Robot();
@@ -60,13 +59,13 @@ public class RobotContainer {
  
 public RobotContainer() {
     s_Swerve.setDefaultCommand(c_Drive);
+    s_Shooter.setDefaultCommand(c_Shooter);
+    s_Intake.setDefaultCommand(c_Intake);
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);   
 
-    controlType = new SendableChooser<>();
     configureAutos();
-    SmartDashboard.putData("Control Chooser", controlType); 
   }
 
 
@@ -121,13 +120,18 @@ public RobotContainer() {
   public void testBindings()
   {
     opController.rightTrigger().whileTrue(c_Shooter.test());//  Right trigger
+    opController.rightTrigger().whileFalse(c_Shooter.testStop());
     opController.rightBumper().whileTrue(c_Shooter.feed());//   Right Bumper
+    opController.rightBumper().whileFalse(c_Shooter.feedStop());
 
     opController.povUp().whileTrue(c_Shooter.pitchUp());//      up
     opController.povDown().whileTrue(c_Shooter.pitchDown());//  down
     opController.povLeft().whileTrue(c_Shooter.launch()); //    left
-    opController.povRight().onTrue(c_Shooter.setHome());//      right
-
+    // opController.povRight().onTrue(c_Shooter.setHome());//      right
+    opController.povRight().onTrue(c_Shooter.positionTest());
+    // opController.povDown().whileFalse(c_Shooter.stopPitch());
+    // opController.povUp().whileFalse(c_Shooter.stopPitch());
+    
     opController.a().whileTrue(c_Intake.pitchDown());//   a.
     opController.b().onTrue(c_Intake.home());//           b.
     opController.x().whileTrue(c_Intake.deploy());//      x.

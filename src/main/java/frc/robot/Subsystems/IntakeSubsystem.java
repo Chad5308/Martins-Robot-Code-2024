@@ -11,6 +11,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -23,7 +24,8 @@ public class IntakeSubsystem extends SubsystemBase{
     public SparkPIDController pitchMotorPID;
     public SparkPIDController intakeMotorPID;
 
-    public AbsoluteEncoder pitchMotorEncoder;
+    public DutyCycleEncoder pitchAbsoluteEncoder;
+    public RelativeEncoder pitchMotorEncoder;
     public RelativeEncoder intakeMotorEncoder;
 
     public boolean pitchReversed;
@@ -36,9 +38,9 @@ public class IntakeSubsystem extends SubsystemBase{
     public IntakeSubsystem(){
         //1 for pitch Neo, 1 Neo for driving intake rollers, 1 bore encoder
         pitchMotor = new CANSparkMax(Constants.IntakeConstants.pitchMotorID, MotorType.kBrushless);
-        pitchMotorEncoder = pitchMotor.getAbsoluteEncoder();
+        pitchMotorEncoder = pitchMotor.getEncoder();
         pitchMotorPID = pitchMotor.getPIDController();
-
+        pitchAbsoluteEncoder = new DutyCycleEncoder(Constants.IntakeConstants.pitchABSEncoder);
         
         intakeMotor = new CANSparkMax(Constants.IntakeConstants.intakeMotorID, MotorType.kBrushless);
         intakeMotorEncoder = intakeMotor.getEncoder();
@@ -57,10 +59,11 @@ public class IntakeSubsystem extends SubsystemBase{
         pitchMotorPID.setI(Constants.IntakeConstants.kI_pitch);
         pitchMotorPID.setD(Constants.IntakeConstants.kD_pitch);
 
-        pitchMotorEncoder.setPositionConversionFactor(360 * Constants.IntakeConstants.gearRatio); //TODO Multiply by gear ratio of pitch motor when found
+        pitchMotorEncoder.setPositionConversionFactor(360 * Constants.IntakeConstants.gearRatio);
         pitchMotor.setOpenLoopRampRate(5);
         pitchMotorPID.setSmartMotionMaxVelocity(5, 0);
-        pitchMotorEncoder.setZeroOffset(0); //TODO Find this once built
+
+        pitchAbsoluteEncoder.setPositionOffset(0.5);
 
         //Intake Config
         intakeMotor.setInverted(Constants.IntakeConstants.intakeMotorReversed);
@@ -79,7 +82,8 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     public double getPosition(){
-        return pitchMotorEncoder.getPosition();
+        double angle = pitchAbsoluteEncoder.getAbsolutePosition() - pitchAbsoluteEncoder.getPositionOffset();
+        return angle*360;
     }
     
     public void gravity(){
@@ -96,6 +100,7 @@ public class IntakeSubsystem extends SubsystemBase{
     @Override
     public void periodic(){
         getPosition();
+        intakeMotorEncoder.setPosition(getPosition());
         SmartDashboard.putNumber("IntakePosition", getPosition());
     }
     

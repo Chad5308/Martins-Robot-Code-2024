@@ -50,7 +50,12 @@ public class ShooterCommand extends Command{
 
     public Command test(){
         return Commands.runOnce(()->{
-            s_Shooter.setDesiredVelocities(50,50);
+            s_Shooter.setDesiredVelocities(100,100);
+        });
+    }
+    public Command testStop(){
+        return Commands.runOnce(()->{
+            s_Shooter.setDesiredVelocities(0, 0);
         });
     }
 
@@ -58,7 +63,7 @@ public class ShooterCommand extends Command{
     {
         return Commands.run(() -> 
         {
-            s_Shooter.setPosition(s_Shooter.getPosition() + 2);
+            s_Shooter.pitchMotor.set(0.085);
         });
     }
 
@@ -66,7 +71,23 @@ public class ShooterCommand extends Command{
     {
         return Commands.run(() ->
         {
-            s_Shooter.setPosition(s_Shooter.getPosition() - 2);
+            s_Shooter.pitchMotor.set(-0.085);
+        });
+    }
+
+    public Command stopPitch()
+    {
+        return Commands.run(()->
+        {
+            s_Shooter.pitchMotor.set(0);
+        });
+    }
+
+    public Command positionTest()
+    {
+        return Commands.run(()->
+        {
+            s_Shooter.setPosition(25);
         });
     }
 
@@ -76,7 +97,13 @@ public class ShooterCommand extends Command{
 
     public Command feed(){
         return Commands.run(()->{
-            s_Shooter.setBreach(0.5);
+            s_Shooter.setBreach(1);
+        });
+    }
+
+    public Command feedStop(){
+        return Commands.run(()->{
+            s_Shooter.setBreach(0);
         });
     }
    

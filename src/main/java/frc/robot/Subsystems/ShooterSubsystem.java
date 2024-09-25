@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -33,7 +34,8 @@ public class ShooterSubsystem extends SubsystemBase{
     public final CANSparkMax pitchMotor;
 
     public final RelativeEncoder breachMotorEncoder;
-    public final AbsoluteEncoder pitchMotorEncoder;
+    public DutyCycleEncoder pitchAbsoluteEncoder;
+    public final RelativeEncoder pitchMotorEncoder;
     public final SparkPIDController breachMotorPID;
     public final SparkPIDController pitchMotorPID;
 
@@ -51,10 +53,11 @@ public class ShooterSubsystem extends SubsystemBase{
     breachMotor = new CANSparkMax(Constants.ShooterConstants.breachMotorID, MotorType.kBrushless);
     breachMotorEncoder = breachMotor.getEncoder();
     breachMotorPID = breachMotor.getPIDController();
-
+    
     pitchMotor = new CANSparkMax(Constants.ShooterConstants.PitchEncoderID, MotorType.kBrushless);
-    pitchMotorEncoder = pitchMotor.getAbsoluteEncoder();
+    pitchMotorEncoder = pitchMotor.getEncoder();
     pitchMotorPID = pitchMotor.getPIDController();
+    pitchAbsoluteEncoder = new DutyCycleEncoder(Constants.ShooterConstants.pitchABSEncoder);
 
     topConfig = new TalonFXConfiguration();
     bottomConfig = new TalonFXConfiguration();
@@ -116,12 +119,11 @@ public class ShooterSubsystem extends SubsystemBase{
     pitchMotorPID.setD(Constants.ShooterConstants.kD_pitch);
     pitchMotor.setInverted(Constants.ShooterConstants.pitchReversed);
     pitchMotorEncoder.setPositionConversionFactor(360 * Constants.ShooterConstants.gearRatio);
-    pitchMotor.setOpenLoopRampRate(2);
-    pitchMotorPID.setSmartMotionMaxVelocity(5, 0);
+    pitchMotor.setOpenLoopRampRate(0.5);
+    pitchMotorPID.setSmartMotionMaxVelocity(5500, 0);
     pitchMotor.setIdleMode(IdleMode.kBrake);
 
-
-
+    pitchAbsoluteEncoder.setPositionOffset(0.531);
     }
 
 
@@ -180,7 +182,8 @@ public class ShooterSubsystem extends SubsystemBase{
     }
 
     public double getPosition(){
-        return pitchMotorEncoder.getPosition();
+        double angle = pitchAbsoluteEncoder.getAbsolutePosition() - pitchAbsoluteEncoder.getPositionOffset();
+        return angle*360;
     }
 
     public boolean isHome()
@@ -205,8 +208,10 @@ public class ShooterSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
+        pitchMotorEncoder.setPosition(getPosition());
         getUpToSpeed();
         getPosition();
+        
         
         SmartDashboard.putNumber("ShooterPosition", getPosition());
         // SmartDashboard.putNumber("Shooter/Top/Velocity RPS", getTopShooterVelocity());
