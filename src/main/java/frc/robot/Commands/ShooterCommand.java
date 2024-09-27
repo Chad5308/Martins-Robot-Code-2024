@@ -18,83 +18,30 @@ public class ShooterCommand extends Command{
         addRequirements(s_Shooter, s_Limelight);
     }
 
-    @Override
-    public void initialize(){
-        // s_Shooter.home();
-    }
-
-    @Override
-    public void execute(){}
+  
 
    //Manuel Commands
     public Command closeSpeaker(){
         return Commands.runOnce(()->{
-            s_Shooter.setDesiredVelocities(60, 60);
+            // s_Shooter.setDesiredVelocities(100, 100);
             s_Shooter.setPosition(Constants.ShooterConstants.closeSpeakerAngle);
         });
     }
     
     public Command podiumShot(){
         return Commands.runOnce(()->{
-            s_Shooter.setDesiredVelocities(75, 75);
+            // s_Shooter.setDesiredVelocities(100, 100);
             s_Shooter.setPosition(Constants.ShooterConstants.podiumSpeakerAngle);
         });
     }
-
-    public Command stopBreach(){
-        return Commands.runOnce(()->{
-            s_Shooter.setBreach(0);
-        });
-    }
-
-
-    public Command test(){
-        return Commands.runOnce(()->{
-            s_Shooter.setDesiredVelocities(100,100);
-        });
-    }
-    public Command testStop(){
+    
+    public Command home(){
         return Commands.runOnce(()->{
             s_Shooter.setDesiredVelocities(0, 0);
+            s_Shooter.setPosition(0);
         });
     }
-
-    public Command pitchUp()
-    {
-        return Commands.run(() -> 
-        {
-            s_Shooter.pitchMotor.set(0.085);
-        });
-    }
-
-    public Command pitchDown()
-    {
-        return Commands.run(() ->
-        {
-            s_Shooter.pitchMotor.set(-0.085);
-        });
-    }
-
-    public Command stopPitch()
-    {
-        return Commands.run(()->
-        {
-            s_Shooter.pitchMotor.set(0);
-        });
-    }
-
-    public Command positionTest()
-    {
-        return Commands.run(()->
-        {
-            s_Shooter.setPosition(25);
-        });
-    }
-
-
-
-    // Autonomy Commands
-
+    
     public Command feed(){
         return Commands.run(()->{
             s_Shooter.setBreach(1);
@@ -106,28 +53,49 @@ public class ShooterCommand extends Command{
             s_Shooter.setBreach(0);
         });
     }
-   
-    public Command setHome(){
+    
+    // public Command prepareShot(){
+        //     return Commands.run(()->{
+            //         s_Shooter.autoSpeeds();
+            //         s_Shooter.setPosition(s_Limelight.autoAngle());
+            //     });
+            // }
+            
+            
+            
+        //Test Commands
+    
+    public Command test(){
+        return Commands.runOnce(()->{
+            s_Shooter.setDesiredVelocities(100,100);
+        });
+    }
+    public Command testStop(){
         return Commands.runOnce(()->{
             s_Shooter.setDesiredVelocities(0, 0);
-            s_Shooter.home();
         });
     }
 
-    public Command launch(){
-        return Commands.runOnce(()->{
-            s_Shooter.setBreach(1);
-        });
-    }
-
-    public Command prepareShot(){
-        return Commands.run(()->{
-            s_Shooter.autoSpeeds();
-            s_Shooter.setPosition(s_Limelight.autoAngle());
+    public Command positionTest()
+    {
+        return Commands.runOnce(()->
+        {
+            s_Shooter.setPosition(60);
         });
     }
 
 
+
+
+    
+    @Override
+    public void end(boolean interrupted) {
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 
 
 

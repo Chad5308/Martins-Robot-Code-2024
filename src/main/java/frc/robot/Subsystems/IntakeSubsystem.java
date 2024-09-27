@@ -2,6 +2,11 @@ package frc.robot.Subsystems;
 
 import javax.swing.text.StyleContext.SmallAttributeSet;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -18,22 +23,18 @@ import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase{
     
+    public TalonFX intakeMotor;
+    public TalonFXConfiguration intakeConfig;
+    public NeutralOut neutralOut;
+    public VelocityVoltage velocityRequest;
+    public MotionMagicVelocityVoltage motionMagicRequest;
+    public double requestedIntakeSpeed;
+    
+    
     public CANSparkMax pitchMotor;
-    public CANSparkMax intakeMotor;
-
     public SparkPIDController pitchMotorPID;
-    public SparkPIDController intakeMotorPID;
-
     public DutyCycleEncoder pitchAbsoluteEncoder;
     public RelativeEncoder pitchMotorEncoder;
-    public RelativeEncoder intakeMotorEncoder;
-
-    public boolean pitchReversed;
-    public boolean intakeReversed;
-
-    public double desiredPos; //degrees
-    public double posTolerance = 1; //degrees
-
 
     public IntakeSubsystem(){
         //1 for pitch Neo, 1 Neo for driving intake rollers, 1 bore encoder
@@ -42,9 +43,10 @@ public class IntakeSubsystem extends SubsystemBase{
         pitchMotorPID = pitchMotor.getPIDController();
         pitchAbsoluteEncoder = new DutyCycleEncoder(Constants.IntakeConstants.pitchABSEncoder);
         
-        intakeMotor = new CANSparkMax(Constants.IntakeConstants.intakeMotorID, MotorType.kBrushless);
-        intakeMotorEncoder = intakeMotor.getEncoder();
-        intakeMotorPID = intakeMotor.getPIDController();
+        intakeMotor = new TalonFX(Constants.IntakeConstants.intakeMotorID);
+        intakeConfig = new TalonFXConfiguration();
+        velocityRequest = new VelocityVoltage(0).withSlot(0);
+        motionMagicRequest = new MotionMagicVelocityVoltage(0);
 
         configure();
     }
@@ -59,20 +61,30 @@ public class IntakeSubsystem extends SubsystemBase{
         pitchMotorPID.setI(Constants.IntakeConstants.kI_pitch);
         pitchMotorPID.setD(Constants.IntakeConstants.kD_pitch);
 
-        pitchMotorEncoder.setPositionConversionFactor(360 * Constants.IntakeConstants.gearRatio);
-        pitchMotor.setOpenLoopRampRate(5);
-        pitchMotorPID.setSmartMotionMaxVelocity(5, 0);
 
-        pitchAbsoluteEncoder.setPositionOffset(0.5);
+        pitchMotorEncoder.setPositionConversionFactor(360 * Constants.IntakeConstants.gearRatio);
+        pitchAbsoluteEncoder.setPositionOffset(0.2547);
+
 
         //Intake Config
         intakeMotor.setInverted(Constants.IntakeConstants.intakeMotorReversed);
-        intakeMotor.setIdleMode(IdleMode.kCoast);
 
-        intakeMotorPID.setP(Constants.IntakeConstants.kP_intake);
-        intakeMotorPID.setI(Constants.IntakeConstants.kI_intake);
-        intakeMotorPID.setD(Constants.IntakeConstants.kD_intake);
-        intakeMotor.setOpenLoopRampRate(1);
+        intakeConfig.Slot0.kS = Constants.IntakeConstants.kS_intake;
+        intakeConfig.Slot0.kV = Constants.IntakeConstants.kV_intake;
+        intakeConfig.Slot0.kA = Constants.IntakeConstants.kA_intake;
+        intakeConfig.Slot0.kP = Constants.IntakeConstants.kP_intake;
+        intakeConfig.Slot0.kI = Constants.IntakeConstants.kI_intake;
+        intakeConfig.Slot0.kD = Constants.IntakeConstants.kD_intake;
+
+        intakeConfig.MotionMagic.MotionMagicAcceleration = 100;
+        intakeConfig.MotionMagic.MotionMagicJerk = 2000;
+
+        intakeMotor.getConfigurator().apply(intakeConfig);
+        neutralOut = new NeutralOut();
+
+        
+
+        pitchMotorEncoder.setPosition(0);
     }
 
 
@@ -82,8 +94,12 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     public double getPosition(){
-        double angle = pitchAbsoluteEncoder.getAbsolutePosition() - pitchAbsoluteEncoder.getPositionOffset();
-        return angle*360;
+        return pitchMotorEncoder.getPosition();
+    }
+
+    public double getAbsolutePosition()
+    {
+        return Math.abs((pitchAbsoluteEncoder.getAbsolutePosition()-pitchAbsoluteEncoder.getPositionOffset()))*360;
     }
     
     public void gravity(){
@@ -92,15 +108,38 @@ public class IntakeSubsystem extends SubsystemBase{
 
 
     //Intake Methods
-    public void setIntakeSpeed(double speed){
-       intakeMotor.set(speed);
+    public void setIntakeSpeed(double rps){
+        requestedIntakeSpeed = rps;
+    }
+    
+    public void intakeGetUpToSpeed()
+    {
+        if(requestedIntakeSpeed<=0)
+        {
+            setIntakeNeutralOutput();
+        }else
+        {
+
+            intakeMotor.setControl(motionMagicRequest.withVelocity(-requestedIntakeSpeed));    
+        }
+    }
+
+    public void setIntakeNeutralOutput()
+    {
+        intakeMotor.setControl(neutralOut);
     }
 
 
     @Override
     public void periodic(){
-        getPosition();
-        intakeMotorEncoder.setPosition(getPosition());
+        intakeGetUpToSpeed();
+
+        if(getAbsolutePosition()<130 && getAbsolutePosition()>0)
+        {
+            pitchMotorEncoder.setPosition(getAbsolutePosition());
+        }
+
+        SmartDashboard.putNumber("absolute position", getAbsolutePosition());
         SmartDashboard.putNumber("IntakePosition", getPosition());
     }
     

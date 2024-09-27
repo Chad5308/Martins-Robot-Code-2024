@@ -16,42 +16,95 @@ public class IntakeCommand extends Command{
 
     @Override
     public void initialize(){
-        // home();
+        if(s_Intake.getAbsolutePosition()>100)
+        {
+            s_Intake.pitchMotorEncoder.setPosition(s_Intake.getAbsolutePosition()-129);
+        }else{
+            s_Intake.pitchMotorEncoder.setPosition(s_Intake.getAbsolutePosition());
+        }
     }
 
 
 
     public Command home(){
         return Commands.runOnce(()->{
-            s_Intake.setPosition(0);
+            s_Intake.setPosition(100);
             s_Intake.setIntakeSpeed(0);
         });
     }
 
     public Command deploy(){
         return Commands.runOnce(()->{
-            s_Intake.setPosition(125);//TODO Check Value
-            s_Intake.setIntakeSpeed(1);
+            s_Intake.setPosition(0);
+            s_Intake.setIntakeSpeed(30);
         });
     }
 
-    public Command pitchUp()
+    public Command shootPosition()
     {
-        return Commands.run(() ->
-        {
-            s_Intake.pitchMotor.set(.25);
+        return Commands.runOnce(()->{
+            s_Intake.setPosition(60);
         });
     }
 
-    public Command pitchDown()
+    public Command ampPosition()
     {
-        return Commands.run(() ->
+        return Commands.runOnce(()->{
+            s_Intake.setPosition(90);
+        });
+    }
+
+    public Command reverseIntake()
+    {
+         return Commands.runOnce(()->{
+            s_Intake.setIntakeSpeed(-20);
+        });
+    }
+
+    public Command ampRoutine()
+    {
+        return Commands.runOnce(()->{
+            ampPosition();
+            reverseIntake();
+        });
+    }
+
+   
+
+    //Test Commands
+
+    public Command pitchTest()
+    {
+        return Commands.run(()->
         {
-            s_Intake.pitchMotor.set(-0.25);
+            s_Intake.setPosition(100);
+        });
+    }
+
+    public Command intakeTest()
+    {
+        return Commands.run(()->
+        {
+            s_Intake.setIntakeSpeed(20);//RPS
+        });
+    }
+
+    public Command intakeTestStop()
+    {
+        return Commands.run(()->
+        {
+            s_Intake.setIntakeSpeed(0);//RPS
         });
     }
 
 
+    @Override
+    public void end(boolean interrupted) {}
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 
 
 

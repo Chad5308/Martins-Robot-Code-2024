@@ -5,7 +5,6 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkMax;
@@ -13,8 +12,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -82,8 +79,8 @@ public class ShooterSubsystem extends SubsystemBase{
     topConfig.Slot0.kI = Constants.ShooterConstants.kI_TopShooter;
     topConfig.Slot0.kD = Constants.ShooterConstants.kD_TopShooter;
 
-    topConfig.MotionMagic.MotionMagicAcceleration = 400;
-    topConfig.MotionMagic.MotionMagicJerk = 4000;
+    topConfig.MotionMagic.MotionMagicAcceleration = 600;
+    topConfig.MotionMagic.MotionMagicJerk = 6000;
 
     bottomConfig.Slot0.kS = Constants.ShooterConstants.kS_BottomShooter;
     bottomConfig.Slot0.kV = Constants.ShooterConstants.kV_BottomShooter;
@@ -92,8 +89,8 @@ public class ShooterSubsystem extends SubsystemBase{
     bottomConfig.Slot0.kI = Constants.ShooterConstants.kI_BottomShooter;
     bottomConfig.Slot0.kD = Constants.ShooterConstants.kD_BottomShooter;
 
-    bottomConfig.MotionMagic.MotionMagicAcceleration = 400;
-    bottomConfig.MotionMagic.MotionMagicJerk = 4000;
+    bottomConfig.MotionMagic.MotionMagicAcceleration = 600;
+    bottomConfig.MotionMagic.MotionMagicJerk = 6000;
 
     topMotor.getConfigurator().apply(topConfig);
     bottomMotor.getConfigurator().apply(bottomConfig);
@@ -104,26 +101,26 @@ public class ShooterSubsystem extends SubsystemBase{
     neutralOut = new NeutralOut();
 
     //Breach Motor Config
-    breachMotor.restoreFactoryDefaults();
+    // breachMotor.restoreFactoryDefaults();
     breachMotorPID.setP(Constants.ShooterConstants.kP_breach);
     breachMotorPID.setI(Constants.ShooterConstants.kI_breach);
     breachMotorPID.setD(Constants.ShooterConstants.kD_breach);
     breachMotor.setInverted(Constants.ShooterConstants.breachReversed);
-    breachMotor.setOpenLoopRampRate(Constants.ShooterConstants.ramp_rate);
-    breachMotor.setIdleMode(IdleMode.kBrake);
+    breachMotor.setIdleMode(IdleMode.kCoast);
 
     //Pitch Motor Config
-    pitchMotor.restoreFactoryDefaults();
+    // pitchMotor.restoreFactoryDefaults();
     pitchMotorPID.setP(Constants.ShooterConstants.kP_pitch);
     pitchMotorPID.setI(Constants.ShooterConstants.kI_pitch);
     pitchMotorPID.setD(Constants.ShooterConstants.kD_pitch);
     pitchMotor.setInverted(Constants.ShooterConstants.pitchReversed);
     pitchMotorEncoder.setPositionConversionFactor(360 * Constants.ShooterConstants.gearRatio);
-    pitchMotor.setOpenLoopRampRate(0.5);
-    pitchMotorPID.setSmartMotionMaxVelocity(5500, 0);
     pitchMotor.setIdleMode(IdleMode.kBrake);
+    pitchMotorEncoder.setPosition(0);
 
-    pitchAbsoluteEncoder.setPositionOffset(0.531);
+    pitchAbsoluteEncoder.setPositionOffset(0.525);
+
+    pitchMotorEncoder.setPosition(getPosition());
     }
 
 
@@ -183,7 +180,7 @@ public class ShooterSubsystem extends SubsystemBase{
 
     public double getPosition(){
         double angle = pitchAbsoluteEncoder.getAbsolutePosition() - pitchAbsoluteEncoder.getPositionOffset();
-        return angle*360;
+        return (angle*-360);
     }
 
     public boolean isHome()
@@ -191,12 +188,10 @@ public class ShooterSubsystem extends SubsystemBase{
         return (getPosition()<=5);
     }
    
-    public void home(){
-        pitchMotorPID.setReference(0, ControlType.kPosition);
-    }
+ 
 
     public void gravity(){
-        pitchMotorPID.setP((0.001 * Math.sin(Math.toRadians(pitchMotorEncoder.getPosition()))) + Constants.IntakeConstants.kP_pitch);//TODO Make sure the gravity constant is working
+        pitchMotorPID.setP((0.025 * Math.sin(Math.toRadians(getPosition()))) + Constants.ShooterConstants.kP_pitch);//TODO Make sure the gravity constant is working
     }
 
 
@@ -209,8 +204,9 @@ public class ShooterSubsystem extends SubsystemBase{
     @Override
     public void periodic(){
         pitchMotorEncoder.setPosition(getPosition());
+        gravity();
         getUpToSpeed();
-        getPosition();
+
         
         
         SmartDashboard.putNumber("ShooterPosition", getPosition());

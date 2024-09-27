@@ -173,18 +173,20 @@ public final class Constants {
     public static final int pitchABSEncoder = 7;
     public static final int intakeSwitchID = 1;
 
-    public static final double gearRatio = 1/20; //TODO Check this
-
+    public static final double gearRatio = 0.05;
     public static final boolean pitchMotorReversed = false;
-    public static final boolean intakeMotorReversed = false;
+    public static final boolean intakeMotorReversed = true;
 
-    public static final double kP_pitch = 0.008;
-    public static final double kI_pitch = 0.0000008;
-    public static final double kD_pitch = 0.03;
+    public static final double kP_pitch = 0.003;
+    public static final double kI_pitch = 0.000005;
+    public static final double kD_pitch = 0.00075;
 
-    public static final double kP_intake = 1.0;
+    public static final double kS_intake = 0.4;
+    public static final double kV_intake = 0.2;
+    public static final double kA_intake = 0.01;
+    public static final double kP_intake = 0.00001;
     public static final double kI_intake = 0;
-    public static final double kD_intake = 0.0;
+    public static final double kD_intake = 0.01;
 
   }
 
@@ -197,7 +199,7 @@ public final class Constants {
     public static final int pitchABSEncoder = 8;
     public static final int shooterSwitchID = 0;
 
-    public static final double gearRatio = 1/20;
+    public static final double gearRatio = 0.05;
 
 
     public static final double ramp_rate = 0.1;
@@ -206,8 +208,8 @@ public final class Constants {
     //PID Values
     public static final double kS_TopShooter = 0.4;
     public static final double kV_TopShooter = 0.12;
-    public static final double kA_TopShooter = 0.1;
-    public static final double kP_TopShooter = 1.0;
+    public static final double kA_TopShooter = 0.04;
+    public static final double kP_TopShooter = 0.000025;
     public static final double kI_TopShooter = 0;
     public static final double kD_TopShooter = 0.01;
 
@@ -218,9 +220,9 @@ public final class Constants {
     public static final double kI_BottomShooter = 0;
     public static final double kD_BottomShooter = 0.01;
 
-    public static final double kP_pitch = 0.008;
-    public static final double kI_pitch = 0.0000008;
-    public static final double kD_pitch = 0.03;
+    public static final double kP_pitch = 0.0205;
+    public static final double kI_pitch = 0.000025;
+    public static final double kD_pitch = 0.7;
 
     public static final double kP_breach = 0.01;
     public static final double kI_breach = 0;
@@ -230,15 +232,13 @@ public final class Constants {
     public static final boolean topMotorReversed = false;
     public static final boolean bottomMotorReversed = false;
     public static final boolean breachReversed = false;
-    public static final boolean pitchReversed = false;
+    public static final boolean pitchReversed = true;
 
 
 
      //Known Angles TODO Find these values after testing
-     public static final double sourceAngle = 0;
-     public static final double closeSpeakerAngle = 0;
-     public static final double podiumSpeakerAngle = 0;
-     public static final double path2Angle = 0;
+     public static final double closeSpeakerAngle = 60;
+     public static final double podiumSpeakerAngle = 50;
 }
 
 
