@@ -1,0 +1,67 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8,
+      "y": 4.0
+    },
+    "rotation": -57.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "FaceForward Wheels"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "BreachPrepare"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Feed"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HomeShooter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopFeed"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceLeave"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Shoot Autos",
+  "choreoAuto": false
+}

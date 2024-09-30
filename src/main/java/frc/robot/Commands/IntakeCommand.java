@@ -9,6 +9,7 @@ public class IntakeCommand extends Command{
 
     public IntakeSubsystem s_Intake;
 
+
     public IntakeCommand(IntakeSubsystem s_Intake){
         this.s_Intake = s_Intake;
         addRequirements(s_Intake);
@@ -26,9 +27,10 @@ public class IntakeCommand extends Command{
 
 
 
+
     public Command home(){
         return Commands.runOnce(()->{
-            s_Intake.setPosition(100);
+            s_Intake.setPosition(120);
             s_Intake.setIntakeSpeed(0);
         });
     }
@@ -36,7 +38,6 @@ public class IntakeCommand extends Command{
     public Command deploy(){
         return Commands.runOnce(()->{
             s_Intake.setPosition(0);
-            s_Intake.setIntakeSpeed(30);
         });
     }
 
@@ -56,18 +57,32 @@ public class IntakeCommand extends Command{
 
     public Command reverseIntake()
     {
-         return Commands.runOnce(()->{
-            s_Intake.setIntakeSpeed(-20);
+         return Commands.run(()->{
+            s_Intake.setIntakeSpeed(17.5);
         });
     }
 
-    public Command ampRoutine()
+    public Command intake()
     {
-        return Commands.runOnce(()->{
-            ampPosition();
-            reverseIntake();
+        return Commands.run(()->{
+            s_Intake.setIntakeSpeed(-17.5);
         });
     }
+
+    public Command intakeStop()
+    {
+        return Commands.run(()->
+        {
+            s_Intake.setIntakeSpeed(0);//RPS
+        });
+    }
+    // public Command ampRoutine()
+    // {
+    //     return Commands.run(()->{
+    //         ampPosition();
+    //         reverseIntake();
+    //     });
+    // }
 
    
 
@@ -89,13 +104,6 @@ public class IntakeCommand extends Command{
         });
     }
 
-    public Command intakeTestStop()
-    {
-        return Commands.run(()->
-        {
-            s_Intake.setIntakeSpeed(0);//RPS
-        });
-    }
 
 
     @Override

@@ -3,7 +3,8 @@ package frc.robot.DriveFiles;
 
 import java.util.Optional;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -13,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -67,19 +69,22 @@ public class SwerveSubsystem extends SubsystemBase{
     }
         
     //gyro int and heading code
-    public Pigeon2 pigeon2 = new Pigeon2(13);
+    private AHRS gyro = new AHRS(SPI.Port.kMXP);
     public void zeroHeading() {
-        pigeon2.reset();
-    }
+        gyro.reset();
+        gyro.setAngleAdjustment(0);    }
     public double getHeading() {
-        return -pigeon2.getAngle();
+        return Math.IEEEremainder(-gyro.getAngle(), 360);
     }
     public Rotation2d geRotation2d() {
-        return pigeon2.getRotation2d();
+        return Rotation2d.fromDegrees(getHeading());
     }
 
     //Odometer code
     public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
+    geRotation2d(), getPositions(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition()));
+
+    public final SwerveDriveOdometry autoOdometry = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
     geRotation2d(), getPositions(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition()));
 
 
@@ -92,6 +97,12 @@ public class SwerveSubsystem extends SubsystemBase{
     public Pose2d getPose() {
         return odometer.getPoseMeters();
     }
+
+    public Pose2d getAutoPose()
+    {
+        return autoOdometry.getPoseMeters();
+    }
+
     public ChassisSpeeds getRobotRelativeSpeeds(){
         return Constants.DriveConstants.kDriveKinematics.toChassisSpeeds(frontRightModule.gState(), frontLeftModule.gState(), backRightModule.gState(), backLeftModule.gState());
     }
@@ -194,6 +205,6 @@ public class SwerveSubsystem extends SubsystemBase{
             //  blModPos = new SwerveModulePosition(backLeftModule.getPositionMeters(), backLeftModule.gState().angle);
             //  brModPos = new SwerveModulePosition(backRightModule.getPositionMeters(), backRightModule.gState().angle);
 
-            SmartDashboard.putBoolean("Allience", isRedAlliance);
+            // SmartDashboard.putBoolean("Allience", isRedAlliance);
         }
 }

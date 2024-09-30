@@ -2,7 +2,6 @@ package frc.robot.Subsystems;
 
 import java.util.Optional;
 
-import org.opencv.core.Mat;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;

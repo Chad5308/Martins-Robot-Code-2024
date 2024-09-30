@@ -13,11 +13,11 @@ public class DriveCommand extends Command{
     
 
     
-    private final SwerveSubsystem swerveSubsystem;
+    private final SwerveSubsystem s_Swerve;
     public final CommandXboxController opController;
 
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-    private boolean fieldOriented=false;
+    private boolean fieldOriented=true;
      public double ySpeed, xSpeed, turningSpeed;
      public double ll_zSpeed, ll_xSpeed, ll_turningSpeed;
     public ChassisSpeeds chassisSpeeds;
@@ -26,19 +26,19 @@ public class DriveCommand extends Command{
 
 
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem, CommandXboxController opController) {
-                this.swerveSubsystem = swerveSubsystem;
+    public DriveCommand(SwerveSubsystem s_Swerve, CommandXboxController opController) {
+                this.s_Swerve = s_Swerve;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
-                addRequirements(swerveSubsystem);
+                addRequirements(s_Swerve);
                 this.opController = opController;
     }
 
 
     @Override
     public void initialize() {
-     swerveSubsystem.faceAllFoward();
+     s_Swerve.faceAllFoward();
     }
 
  
@@ -50,7 +50,7 @@ public class DriveCommand extends Command{
         xSpeed = -opController.getLeftX();
         ySpeed = -opController.getLeftY();
         turningSpeed = -opController.getRightX();
-        fieldOriented = swerveSubsystem.fieldOriented;
+        fieldOriented = s_Swerve.fieldOriented;
 
 
         
@@ -67,18 +67,18 @@ public class DriveCommand extends Command{
 
         ChassisSpeeds chassisSpeeds;
         if(fieldOriented){
-            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, turningSpeed, swerveSubsystem.geRotation2d());
+            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, turningSpeed, s_Swerve.geRotation2d());
         }else {
             chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed);
         }
-        swerveSubsystem.setModuleStates(chassisSpeeds);
+        s_Swerve.setModuleStates(chassisSpeeds);
 
     }
 
 
     @Override
     public void end(boolean interrupted) {
-        swerveSubsystem.stopModules();
+        s_Swerve.stopModules();
     }
 
     @Override

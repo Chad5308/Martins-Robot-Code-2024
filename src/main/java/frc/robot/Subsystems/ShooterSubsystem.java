@@ -114,11 +114,11 @@ public class ShooterSubsystem extends SubsystemBase{
     pitchMotorPID.setI(Constants.ShooterConstants.kI_pitch);
     pitchMotorPID.setD(Constants.ShooterConstants.kD_pitch);
     pitchMotor.setInverted(Constants.ShooterConstants.pitchReversed);
-    pitchMotorEncoder.setPositionConversionFactor(360 * Constants.ShooterConstants.gearRatio);
+    pitchMotorEncoder.setPositionConversionFactor(360.0 * Constants.ShooterConstants.gearRatio);
     pitchMotor.setIdleMode(IdleMode.kBrake);
     pitchMotorEncoder.setPosition(0);
 
-    pitchAbsoluteEncoder.setPositionOffset(0.525);
+    pitchAbsoluteEncoder.setPositionOffset(0.6065);
 
     pitchMotorEncoder.setPosition(getPosition());
     }
@@ -204,7 +204,7 @@ public class ShooterSubsystem extends SubsystemBase{
     @Override
     public void periodic(){
         pitchMotorEncoder.setPosition(getPosition());
-        gravity();
+        // gravity();
         getUpToSpeed();
 
         

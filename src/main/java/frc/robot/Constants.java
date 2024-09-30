@@ -80,7 +80,7 @@ public final class Constants {
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * kTeleDriveSpeedLimiter;  
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond * kTeleDriveSpeedLimiter;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
-    public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 2.5;
+    public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 1.35;
   }
   
   public static final class ModuleConstants {
@@ -181,12 +181,12 @@ public final class Constants {
     public static final double kI_pitch = 0.000005;
     public static final double kD_pitch = 0.00075;
 
-    public static final double kS_intake = 0.4;
-    public static final double kV_intake = 0.2;
-    public static final double kA_intake = 0.01;
+    public static final double kS_intake = 0.25;
+    public static final double kV_intake = 0.075;
+    public static final double kA_intake = 0.0025;
     public static final double kP_intake = 0.00001;
     public static final double kI_intake = 0;
-    public static final double kD_intake = 0.01;
+    public static final double kD_intake = 0;
 
   }
 
@@ -220,9 +220,9 @@ public final class Constants {
     public static final double kI_BottomShooter = 0;
     public static final double kD_BottomShooter = 0.01;
 
-    public static final double kP_pitch = 0.0205;
+    public static final double kP_pitch = 0.009;
     public static final double kI_pitch = 0.000025;
-    public static final double kD_pitch = 0.7;
+    public static final double kD_pitch = 0.05;
 
     public static final double kP_breach = 0.01;
     public static final double kI_breach = 0;
@@ -237,8 +237,8 @@ public final class Constants {
 
 
      //Known Angles TODO Find these values after testing
-     public static final double closeSpeakerAngle = 60;
-     public static final double podiumSpeakerAngle = 50;
+     public static final double closeSpeakerAngle = 50;
+     public static final double podiumSpeakerAngle = 30;
 }
 
 

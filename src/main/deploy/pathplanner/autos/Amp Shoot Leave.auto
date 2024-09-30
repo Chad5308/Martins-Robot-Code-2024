@@ -1,0 +1,80 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8,
+      "y": 7.0
+    },
+    "rotation": 36.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "FaceForward Wheels"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "BreachPrepare"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootPositionIntake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Feed"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "HomeShooter"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "HomeIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AmpSideLeave"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Shoot Autos",
+  "choreoAuto": false
+}

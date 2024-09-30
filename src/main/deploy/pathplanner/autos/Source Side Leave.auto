@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8,
+      "y": 4.0
+    },
+    "rotation": 112.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "FaceForward Wheels"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceLeave"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Leave Autos",
+  "choreoAuto": false
+}

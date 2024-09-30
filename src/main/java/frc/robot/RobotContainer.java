@@ -6,7 +6,6 @@ package frc.robot;
 
 import frc.robot.Commands.AutoCommand;
 import frc.robot.Commands.IntakeCommand;
-import frc.robot.Commands.AutonomyCommand;
 import frc.robot.Commands.ShooterCommand;
 import frc.robot.Constants.OIConstants;
 import frc.robot.DriveFiles.DriveCommand;
@@ -17,7 +16,6 @@ import frc.robot.Subsystems.LimelightSubsystem;
 import frc.robot.Subsystems.ShooterSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,7 +47,7 @@ public class RobotContainer {
   public DriveCommand c_Drive = new DriveCommand(s_Swerve, opController);
   public ShooterCommand c_Shooter = new ShooterCommand(s_Shooter, s_Limelight);
   public IntakeCommand c_Intake = new IntakeCommand(s_Intake);
-  public AutoCommand c_AutoCommand = new AutoCommand(c_Drive, s_Swerve, s_Limelight);
+  public AutoCommand c_AutoCommand = new AutoCommand(c_Drive, s_Swerve, s_Limelight, c_Intake, c_Shooter);
   // public AutonomyCommand c_Detection = new AutonomyCommand(c_Shooter, c_Intake);
   private SendableChooser<Command> autoChooser;
 
@@ -63,18 +61,39 @@ public RobotContainer() {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);   
 
-    configureAutos();
+    // configureAutos();
   }
 
 
+  // public Command ampSideLeave()
+  // {
+  //   return new PathPlannerAuto("Amp Side Leave");
+  // }
+  // public Command midLeave()
+  // {
+  //   return new PathPlannerAuto("Mid Leave");
+  // }
+  // public Command sourceSideLeave()
+  // {
+  //   return new PathPlannerAuto("Source Side Leave");
+  // }
+  // public Command doNothing()
+  // {
+  //   return new PathPlannerAuto("Do Nothing");
+  // }
+  // public Command testRotation()
+  // {
+  //   return new PathPlannerAuto("Test");
+  // }
 
-  public void configureAutos(){
-    autoChooser.addOption("TestAuto", testAuto());
-  }
 
-  public Command testAuto(){
-    return new PathPlannerAuto("testAuto");
-  }
+  // public void configureAutos(){
+  //   autoChooser.addOption("Mid Leave", midLeave());
+  //   autoChooser.addOption("Source Side Leave", sourceSideLeave());
+  //   autoChooser.addOption("Amp Side Leave", ampSideLeave());
+  //   autoChooser.addOption("Rotation Test", testRotation());
+  // }
+
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
@@ -91,22 +110,31 @@ public RobotContainer() {
  
 
     //Intake Controls
-    opController.leftBumper().whileTrue(c_Intake.deploy().alongWith(c_Shooter.feed()));
-    opController.leftBumper().whileFalse(c_Intake.home().alongWith(c_Shooter.feedStop()));
-    opController.leftTrigger().whileTrue(c_Intake.ampRoutine());
-    opController.leftTrigger().whileFalse(c_Intake.home().alongWith(c_Shooter.feedStop()));
+    opController.rightBumper().whileTrue(c_Intake.deploy());
+    opController.rightBumper().whileFalse(c_Intake.home());
+
+    opController.x().whileTrue(c_Intake.reverseIntake());
+    opController.leftTrigger().whileFalse(c_Intake.intakeStop());
+    opController.leftTrigger().whileTrue(c_Intake.intake());
+    opController.rightTrigger().whileTrue(c_Shooter.lowShoot().alongWith(c_Intake.shootPosition()));
+    opController.rightTrigger().whileFalse(c_Shooter.home());
+
+    opController.b().whileTrue(c_Shooter.closeSpeaker());
+    opController.b().whileFalse(c_Shooter.home());
 
     
     
     
     //Shooter Controls
-    opController.rightTrigger().whileTrue(c_Shooter.closeSpeaker().alongWith(c_Intake.shootPosition()));
-    opController.rightTrigger().whileFalse(c_Shooter.home());
-    opController.rightBumper().whileTrue(c_Shooter.podiumShot().alongWith(c_Intake.shootPosition()));
-    opController.rightBumper().whileFalse(c_Shooter.home());
+    // opController.rightTrigger().whileTrue(c_Shooter.closeSpeaker().alongWith(c_Intake.shootPosition()));
+    // opController.rightTrigger().whileFalse(c_Shooter.home().alongWith(c_Intake.home()));
+    // opController.rightBumper().whileTrue(c_Shooter.podiumShot().alongWith(c_Intake.shootPosition()));
+    // opController.rightBumper().whileFalse(c_Shooter.home().alongWith(c_Intake.home()));
     
-    opController.y().whileTrue(c_Shooter.feed());
-    opController.y().whileFalse(c_Shooter.feedStop());
+    opController.leftBumper().whileTrue(c_Shooter.feed());
+    opController.leftBumper().whileFalse(c_Shooter.feedStop());
+    opController.a().whileTrue(c_Shooter.reverseFeed());
+    opController.a().whileFalse(c_Shooter.feedStop());
 
 
     // opController.leftStick().whileTrue(c_Shooter.prepareShot());
@@ -135,6 +163,6 @@ public RobotContainer() {
 
     opController.x().onTrue(c_Intake.pitchTest());//     x.
     opController.b().whileTrue(c_Intake.intakeTest());//    b.
-    opController.b().whileFalse(c_Intake.intakeTestStop());//   b.
+    opController.b().whileFalse(c_Intake.intakeStop());//   b.
   }
 }
